@@ -38,3 +38,39 @@ atributos:
 * descripción
 * imagen
 * editorial
+
+
+## API
+
+Para instalar la api necesitas nest por lo que debes instalarlo.
+Tambien se instalara lo necesario para conectar la base de datos.
+Yo uso una de tipo mysql con typeOrm. 
+```bash
+npm i -g @nestjs/cli
+npm install --save @nestjs/typeorm typeorm mysql2
+```
+
+### correr api
+
+La api se conecta a una base de datos mysql, por lo que debes tener la tuya, en esta ademas debes tener un .env en la carpeta del proyecto, con las credenciales de la siguiente forma:
+
+```
+DB_HOST=localhost
+DB_PORT=3000
+DB_USERNAME=root
+DB_PASSWORD=root
+DB_NAME=test
+```
+
+y debes tener instalado la libreria dotenv
+
+```
+npm install dotenv
+```
+
+para correr la api correr el siguiente comando en la carpeta api
+
+``` bash
+cd api 
+npm run start
+```
