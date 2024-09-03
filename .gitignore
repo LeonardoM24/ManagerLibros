@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+
+# Build output
+.next/
+out/
+dist/
+
+# Production
+*.log
+*.env.local
+*.env.*.local
+.env
+.env.*
+
+# Editor directories and files
+.vscode/
+.idea/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Jest
+coverage/
