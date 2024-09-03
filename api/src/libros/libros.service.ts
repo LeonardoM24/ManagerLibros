@@ -1,9 +1,10 @@
-import { flatten, Injectable } from "@nestjs/common";
+import { flatten, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Libro } from "./libro.entity";
 import { MoreThanOrEqual, Repository } from "typeorm";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
+import { ActualizarLibroDto } from "./dtos/actualizar-libro.dto";
 
 
 @Injectable()
@@ -11,7 +12,7 @@ export class LibrosService{
     constructor(@InjectRepository(Libro)
     private readonly libroRepository: Repository<Libro>){}
 
-    async create(dto: CrearLibroDto){
+    async crear(dto: CrearLibroDto){
         const libro = this.libroRepository.create(dto);
 
         return await this.libroRepository.save(libro);
@@ -37,5 +38,17 @@ export class LibrosService{
             }
         }
         return this.libroRepository.find({where})
+    }
+
+    async actualizar(id: number, dto: ActualizarLibroDto){
+        const libro = await this.libroRepository.findOne({where: {id}});
+        
+        if(!libro){
+            throw new NotFoundException(`Libro con ID ${id} no encontrado`)
+        }
+        
+        Object.assign(libro, dto);
+
+        return await this.libroRepository.save(libro);
     }
 }
