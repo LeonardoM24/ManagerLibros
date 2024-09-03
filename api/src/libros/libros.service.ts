@@ -51,4 +51,10 @@ export class LibrosService{
 
         return await this.libroRepository.save(libro);
     }
+
+    async borrar(id: number){
+        const libro = await this.libroRepository.findOne({where: {id}})
+
+        return await this.libroRepository.remove(libro);
+    }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { LibrosService } from "./libros.service";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
@@ -58,6 +58,15 @@ export class LibrosController{
         }
         */
         return this.librosService.actualizar(id,dto);
+    }
+
+    @Delete('borrar/:id')
+    borrar(@Param('id') id: number){
+        /*
+        delete
+        http://localhost:3000/libros/borrar/:id
+        */
+        return this.librosService.borrar(id);
     }
 
 }
