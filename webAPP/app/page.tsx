@@ -10,6 +10,7 @@ export default function HomePage(){
   const [books, setBooks] = useState<any[]>([]);
   const [selectedBook, setSelectedBook] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false); // Estado para el modal de agregar
   const [loading, setLoading] = useState<boolean>(true);
 
 
@@ -65,6 +66,10 @@ export default function HomePage(){
     );
   };
 
+  const handleAddBook = () => {
+    setSelectedBook(null);
+    setShowAddModal(true);
+  }
 
   return(
     <div>
@@ -96,6 +101,25 @@ export default function HomePage(){
           }}// actualizar libro
         />
       )}
+
+      {showAddModal && (
+        <EditModal 
+          onClose={() => setShowAddModal(false)} 
+          onSave={(newBook) => {
+            updateBookInState(newBook);
+            setShowAddModal(false); 
+          }}// actualizar libro
+          isAdding={true}
+        />
+      )}
+
+      {/* Boton add */}
+      <button 
+        className={styles.floatingButton} 
+        onClick={handleAddBook}>
+        +
+      </button>
+
     </div>
   )
 

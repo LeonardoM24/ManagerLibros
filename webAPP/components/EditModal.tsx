@@ -4,15 +4,26 @@ import { useState } from 'react';
 import styles from './EditModal.module.css';
 import { error } from 'console';
 
-export default function EditModal({ book, onClose, onSave }: { book: any, onClose: () => void, onSave: (updatedBook: any) => void }) {
-    const [name, setName] = useState(book.titulo);
-    const [quantity, setQuantity] = useState(book.cantidad);
-    const [autor, setAutor] = useState(book.autor);
-    const [editorial, setEditorial] = useState(book.editorial);
-    const [description, setDescription] = useState(book.descripcion);
+export default function EditModal({ 
+    book, 
+    onClose, 
+    onSave, 
+    isAdding = false
+}: { 
+    book?: any, 
+    onClose: () => void, 
+    onSave: (updatedBook: any) => void, 
+    isAdding?: boolean 
+}) {
+    const [name, setName] = useState(book?.titulo || '');
+    const [quantity, setQuantity] = useState(book?.cantidad || 0);
+    const [autor, setAutor] = useState(book?.autor || '');
+    const [editorial, setEditorial] = useState(book?.editorial || '');
+    const [description, setDescription] = useState(book?.descripcion || '');
     
 
     const handleSave = async () => {
+        
         const confirmSave = window.confirm('¿Estas seguro de que quieres guardar los cambios?')
         // Guardar los cambios (enviar los datos a la API).
         if(confirmSave){
@@ -61,6 +72,7 @@ export default function EditModal({ book, onClose, onSave }: { book: any, onClos
                         type="number" 
                         value={quantity} 
                         onChange={(e) => setQuantity(Number(e.target.value))} 
+                        min="0"
                     />
 
                     <label>Autor: </label>
@@ -88,7 +100,7 @@ export default function EditModal({ book, onClose, onSave }: { book: any, onClos
                         <button 
                             className={styles.saveButton}
                             onClick={handleSave}>
-                                Guardar
+                            {isAdding ? 'Agregar' : 'Guardar'}
                         </button>
                         <button 
                             className={styles.cancelButton}

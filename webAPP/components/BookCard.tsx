@@ -7,22 +7,25 @@ const DEFAULT_IMAGE_URL = 'https://images.cdn1.buscalibre.com/fit-in/360x360/4f/
 export default function BookCard({ book, onEdit }: { book: any, onEdit: any }) {
     
     const imageUrl = book.imagen || DEFAULT_IMAGE_URL;
+    const isOutOfStock = book.cantidad === 0;
 
     return (
-    <div className={styles.bookCard}
-        onClick={() => onEdit(book)}
-    >
+        <div className={styles.bookCard}
+            onClick={() => onEdit(book)}
+        >
 
-        <div className={styles.bookContent}>
-            <h3 className={styles.bookTitle}>{book.titulo}</h3>
-            <img 
-                src={imageUrl} 
-                alt={book.titulo} 
-                className={styles.bookImage}
-            />
-                <p className={styles.bookAuthor}>De: {book.autor}</p>
-                <p className={styles.bookQuantity}>{book.cantidad} unidades</p>
+            <div className={styles.bookContent}>
+
+                {isOutOfStock && <p className={styles.outOfStock}>Out of Stock</p>}
+                <h3 className={styles.bookTitle}>{book.titulo}</h3>
+                <img 
+                    src={imageUrl} 
+                    alt={book.titulo} 
+                    className={styles.bookImage}
+                />
+                    <p className={styles.bookAuthor}>De: {book.autor}</p>
+                    <p className={styles.bookQuantity}>{book.cantidad} unidades</p>
+            </div>
         </div>
-    </div>
     );
 }
