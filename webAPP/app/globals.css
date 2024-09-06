@@ -1,0 +1,41 @@
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'Poppins', sans-serif;
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+input, button {
+  padding: 8px;
+  font-size: 16px;
+}
+
+@media (max-width: 600px) {
+  .booksGrid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

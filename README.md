@@ -74,3 +74,16 @@ para correr la api correr el siguiente comando en la carpeta api
 cd api 
 npm run start
 ```
+
+
+### correr webAPP
+
+La pagina web esta en next.js, por lo que  debes tenerlo instalado.
+
+se corre con
+
+
+``` bash
+cd webAPP 
+npm run dev
+```

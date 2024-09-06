@@ -1,0 +1,51 @@
+.bookCard {
+    background-color: #f0f0f0; /* Color gris claro */
+    border: 1px solid #e0e0e0; /* Borde gris claro */
+    border-radius: 12px; /* Esquinas redondeadas */
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    max-width: 280px; /* Ancho máximo para las tarjetas */
+    margin: auto; /* Centrar las tarjetas */
+    font-family: 'Poppins', sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.bookCard:hover {
+    transform: scale(1.05); /* Efecto de aumento al pasar el mouse */
+}
+
+.bookImage {
+    width: 100%;
+    height: auto;
+    border-radius: 12px 12px; /* Esquinas redondeadas solo en la parte superior */
+    object-fit: cover; /* Ajustar la imagen dentro del contenedor */
+}
+
+.bookContent {
+    padding: 16px;
+    flex: 1; /* Permite que el contenido llene el espacio restante */
+    text-align: center;
+}
+
+.bookTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+    text-overflow: ellipsis; /* Mostrar puntos suspensivos si el texto es muy largo */
+    white-space: nowrap; /* Evitar el salto de línea en el título */
+    overflow: hidden;
+    font-family: 'Poppins', sans-serif; /* Usar la fuente Poppins */
+}
+
+.bookAuthor,
+.bookQuantity {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 4px;
+    font-family: 'Poppins', sans-serif; /* Usar la fuente Poppins */
+}
