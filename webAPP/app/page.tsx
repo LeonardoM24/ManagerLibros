@@ -34,37 +34,27 @@ export default function HomePage(){
     }
   };
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
-        loadMoreBooks();
-      }
-    };
-  
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   useEffect(() =>{
     fetchBooks();
   }, []);
-
-  const loadMoreBooks = () => {
-    // infinite scroll
-  };
 
   const handleEditBook = (book: any) => {
     setSelectedBook(book);
     setShowModal(true);
   }
 
-  const updateBookInState  = async (updatedBook: any) => {
+  const updateBookInState  = (updatedBook: any) => {
     setBooks((prevB) =>
       prevB.map((book) => 
         book.id === updatedBook.id ? updatedBook : book  
       )
     );
   };
+
+  const addBookToState = (newBook: any) => {
+    setBooks((prevBooks) => [...prevBooks, newBook]);
+  }
 
   const handleAddBook = () => {
     setSelectedBook(null);
@@ -91,6 +81,7 @@ export default function HomePage(){
         */}
       </main>
 
+      {/* Modal para editar libros */}
       {showModal && selectedBook && (
         <EditModal 
           book={selectedBook} 
@@ -101,12 +92,12 @@ export default function HomePage(){
           }}// actualizar libro
         />
       )}
-
+      {/* modal para agregar libros */}
       {showAddModal && (
         <EditModal 
           onClose={() => setShowAddModal(false)} 
           onSave={(newBook) => {
-            updateBookInState(newBook);
+            addBookToState(newBook);
             setShowAddModal(false); 
           }}// actualizar libro
           isAdding={true}
@@ -119,7 +110,6 @@ export default function HomePage(){
         onClick={handleAddBook}>
         +
       </button>
-
     </div>
   )
 

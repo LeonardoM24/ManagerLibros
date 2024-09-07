@@ -73,7 +73,7 @@ export default function EditModal({
     return (
         <div className={styles.modal}>
             <div className={styles.modalContent}>
-                <h2>Editando: {name}</h2>
+                <h2>{isAdding ? 'Agregar Libro' : `Editando: ${name}`}</h2>
                 <label>Titulo:</label>
                 <input 
                     type="text" 
