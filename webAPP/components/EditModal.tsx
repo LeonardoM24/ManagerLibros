@@ -20,16 +20,28 @@ export default function EditModal({
     const [autor, setAutor] = useState(book?.autor || '');
     const [editorial, setEditorial] = useState(book?.editorial || '');
     const [description, setDescription] = useState(book?.descripcion || '');
-    
+    const [img, setImg] = useState(book?.imagen || '');
 
     const handleSave = async () => {
-        
-        const confirmSave = window.confirm('¿Estas seguro de que quieres guardar los cambios?')
+        let errorMSJ : string = 'Error al actualizar el libro';
+        let msj : string = '¿Estas seguro de que quieres guardar los cambios?';
+        if(isAdding){
+            msj      = '¿Estas seguro que quieres agregar este libro?';
+            errorMSJ = 'Error al agregar el libro';
+        }
+        const confirmSave = window.confirm(msj)
         // Guardar los cambios (enviar los datos a la API).
         if(confirmSave){
             try{
-                const response = await fetch(`http://localhost:3000/libros/actualizar/${book.id}`,{
-                    method:'PUT',
+
+                let apiCall : string = 'http://localhost:3000/libros/crear';
+                let method : string = 'POST';
+                if(!isAdding){
+                    apiCall = `http://localhost:3000/libros/actualizar/${book.id}`;
+                    method  = 'PUT';
+                }
+                const response = await fetch(apiCall,{
+                    method: method,
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -39,76 +51,75 @@ export default function EditModal({
                         autor: autor,
                         editorial: editorial,
                         descripcion: description,
+                        imagen: img,
                     }),
                 });
                 if(!response.ok){
-                    throw new Error('Error al actualizar el libro');
+                    throw new Error(errorMSJ);
                 }
                 const result = await response.json();
-                console.log('Libro actualizado: ', result)
+                console.log('Libro actualizado/guardado: ', result)
                 onSave(result)
                 onClose()
 
             }catch(error){
-                console.error('Error al guardar los cambios: ',error)
+                window.alert(`Error al guardar los cambios: ${error}`);
+                console.error('Error al guardar los cambios: ',error);
             }
         }
+
     };
 
-        return (
-            <div className={styles.modal}>
-                <div className={styles.modalContent}>
-                    <h2>Editando: {name}</h2>
+    return (
+        <div className={styles.modal}>
+            <div className={styles.modalContent}>
+                <h2>Editando: {name}</h2>
+                <label>Titulo:</label>
+                <input 
+                    type="text" 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                />
 
-                    <label>Nombre:</label>
-                    <input 
-                        type="text" 
-                        value={name} 
-                        onChange={(e) => setName(e.target.value)} 
-                    />
+                <label>Cantidad:</label>
+                <input 
+                    type="number" 
+                    value={quantity} 
+                    onChange={(e) => setQuantity(Number(e.target.value))} 
+                    min="0"
+                />
 
-                    <label>Cantidad:</label>
-                    <input 
-                        type="number" 
-                        value={quantity} 
-                        onChange={(e) => setQuantity(Number(e.target.value))} 
-                        min="0"
-                    />
-
-                    <label>Autor: </label>
-                    <input 
-                        type="text" 
-                        value={autor} 
-                        onChange={(e) => setAutor(e.target.value)} 
-                    />
-
-                    <label>Editorial: </label>                    
-                    <input 
-                        type="text" 
-                        value={editorial} 
-                        onChange={(e) => setEditorial(e.target.value)} 
-                    />
-
-                    <label>Descripcion: </label>                    
-                    <textarea
-                        className={styles.textarea}  
-                        value={description} 
-                        onChange={(e) => setDescription(e.target.value)} 
-                    />
-
-                    <div>
-                        <button 
-                            className={styles.saveButton}
-                            onClick={handleSave}>
-                            {isAdding ? 'Agregar' : 'Guardar'}
-                        </button>
-                        <button 
-                            className={styles.cancelButton}
-                            onClick={onClose}>
-                                Cancelar
-                        </button>
-                    </div>
+                <label>Autor: </label>
+                <input 
+                    type="text" 
+                    value={autor} 
+                    onChange={(e) => setAutor(e.target.value)} 
+                />
+                <label>Editorial: </label>                    
+                <input 
+                    type="text" 
+                    value={editorial} 
+                    onChange={(e) => setEditorial(e.target.value)} 
+                />
+                <label>Descripcion: </label>                    
+                <textarea
+                    className={styles.textarea}  
+                    value={description} 
+                    onChange={(e) => setDescription(e.target.value)} 
+                />
+                <div>
+                    <button 
+                        className={styles.saveButton}
+                        onClick={handleSave}>
+                        {isAdding ? 'Agregar' : 'Guardar'}
+                    </button>
+                    <button 
+                        className={styles.cancelButton}
+                        onClick={onClose}>
+                            Cancelar
+                    </button>
                 </div>
             </div>
-        );
+        </div>
+    );
 }
