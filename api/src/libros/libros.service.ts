@@ -1,7 +1,7 @@
 import { flatten, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Libro } from "./libro.entity";
-import { MoreThanOrEqual, Repository } from "typeorm";
+import { MoreThanOrEqual, QueryBuilder, Repository } from "typeorm";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
 import { ActualizarLibroDto } from "./dtos/actualizar-libro.dto";
@@ -18,26 +18,31 @@ export class LibrosService{
         return await this.libroRepository.save(libro);
     }
 
-    async mostrar(dto: MostrarLibrosDto){
-        const where: any = {};
-        if(dto.titulo){
-            where.titulo = dto.titulo;
+    async mostrar(query: MostrarLibrosDto){
+        const { titulo, autor, editorial, disponible } = query;
+        const queryBuilder = this.libroRepository.createQueryBuilder('libro');
+
+        if (titulo && titulo !== '') {
+            queryBuilder.andWhere('libro.titulo LIKE :titulo', { titulo: `%${titulo}%` });
         }
-        if(dto.autor){
-            where.autor = dto.autor;
+        if (autor && autor !== '') {
+            queryBuilder.andWhere('libro.autor LIKE :autor', { autor: `%${autor}%` });
         }
-        if(dto.editorial){
-            where.editorial = dto.editorial
+
+        if (editorial && editorial  !== '') {
+            queryBuilder.andWhere('libro.editorial LIKE :editorial', { editorial: `%${editorial}%` });
         }
-        if(dto.disponible !== null && dto.disponible !== undefined){
-            if(dto.disponible === true){
-                where.cantidad = MoreThanOrEqual(1);
-            }
-            if(dto.disponible === false){
-                where.cantidad = 0;
-            }
+        console.log("hola " + typeof(disponible))
+
+        
+        if(disponible === "true"){
+            queryBuilder.andWhere('libro.cantidad > :cantidad', { cantidad: 0 });
+        }else if(disponible === "false"){
+            queryBuilder.andWhere('libro.cantidad = :cantidad', { cantidad: 0 });
         }
-        return this.libroRepository.find({where})
+        
+
+        return await queryBuilder.getMany()
     }
 
     async actualizar(id: number, dto: ActualizarLibroDto){

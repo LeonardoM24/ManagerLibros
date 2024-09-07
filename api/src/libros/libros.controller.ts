@@ -1,4 +1,4 @@
-import { UploadedFile ,Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from "@nestjs/common";
+import { UploadedFile ,Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors, Query } from "@nestjs/common";
 import { LibrosService } from "./libros.service";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
@@ -7,7 +7,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer';
 import { extname } from 'path'
 import { error } from "console";
-import { Express } from "express";
+import { Express, query } from "express";
 
 @Controller('libros')
 export class LibrosController{
@@ -65,7 +65,7 @@ export class LibrosController{
     }
     
     @Get('mostrar')
-    mostrar(@Body() dto: MostrarLibrosDto){
+    mostrar(@Query() query: MostrarLibrosDto){
         /*
         get
         http://localhost:3000/libros/mostrar
@@ -77,7 +77,8 @@ export class LibrosController{
             "disponible": true
         }
         */
-        return this.librosService.mostrar(dto);
+        
+        return this.librosService.mostrar(query);
     }
     
     @Put('actualizar/:id')
