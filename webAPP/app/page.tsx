@@ -6,9 +6,19 @@ import styles from './page.module.css'
 import Image from "next/image";
 
 
+interface Book{
+  id: number;
+  titulo: string;
+  cantidad: number;
+  autor: string;
+  editorial: string;
+  descripcion: string;
+  imagen: string;
+}
+
 export default function HomePage(){
-  const [books, setBooks] = useState<any[]>([]);
-  const [selectedBook, setSelectedBook] = useState(null);
+  const [books, setBooks] = useState<Book[]>([]);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false); // Estado para el modal de agregar
   const [loading, setLoading] = useState<boolean>(true);
@@ -39,12 +49,12 @@ export default function HomePage(){
     fetchBooks();
   }, []);
 
-  const handleEditBook = (book: any) => {
+  const handleEditBook = (book: Book) => {
     setSelectedBook(book);
     setShowModal(true);
   }
 
-  const updateBookInState  = (updatedBook: any) => {
+  const updateBookInState  = (updatedBook: Book) => {
     setBooks((prevB) =>
       prevB.map((book) => 
         book.id === updatedBook.id ? updatedBook : book  
@@ -54,6 +64,11 @@ export default function HomePage(){
 
   const addBookToState = (newBook: any) => {
     setBooks((prevBooks) => [...prevBooks, newBook]);
+  }
+
+  const removeBookFromState = (bookID: number ) =>{
+    setBooks((prevBooks) => prevBooks.filter(
+      (book) => book.id !== bookID));
   }
 
   const handleAddBook = () => {
@@ -87,7 +102,11 @@ export default function HomePage(){
           book={selectedBook} 
           onClose={() => setShowModal(false)} 
           onSave={(updatedBook) => {
-            updateBookInState(updatedBook);
+            if(updatedBook === null && selectedBook){
+              removeBookFromState(selectedBook.id);//borrar libro
+            }else{
+              updateBookInState(updatedBook); //actualizar libro
+            }
             setShowModal(false); 
           }}// actualizar libro
         />

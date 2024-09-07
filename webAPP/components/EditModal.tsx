@@ -70,6 +70,40 @@ export default function EditModal({
 
     };
 
+    const handleDelete = async () => {
+        let errorMSJ : string = 'Error al borrar el libro';
+        let confirmMsj : string = "¿Seguro que quieres borrar el libro?";
+        const confirmDel = window.confirm(confirmMsj);
+
+        if(confirmDel){
+            try{
+                let id = null;
+                if(!isAdding){
+                    id = book.id;
+                }
+                let apiCall : string = `http://localhost:3000/libros/borrar/${id}`;
+                let method : string = 'DELETE';
+
+                const response = await fetch(apiCall,{
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if(!response.ok){
+                    throw new Error(errorMSJ);
+                }
+                const result = await response.json();
+                console.log('Libro borrado: ', result);
+                onSave(null);
+                onClose();
+            }catch (error){
+                window.alert(`Error al guardar los cambios: ${error}`);
+                console.error('Error al guardar los cambios: ',error);
+            }
+        }
+    }
+
     return (
         <div className={styles.modal}>
             <div className={styles.modalContent}>
@@ -117,6 +151,11 @@ export default function EditModal({
                         className={styles.cancelButton}
                         onClick={onClose}>
                             Cancelar
+                    </button>
+                    <button
+                        className={styles.deleteButton}
+                        onClick={handleDelete}>
+                            Borrar
                     </button>
                 </div>
             </div>
