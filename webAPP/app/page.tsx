@@ -22,6 +22,8 @@ export default function HomePage(){
   const [showModal, setShowModal]       = useState(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false); // Estado para el modal de agregar
   const [loading, setLoading]           = useState<boolean>(true);
+  const [isOpen, setIsOpen]             = useState<boolean>(false);
+
 
   // filtros
   const [searchParams, setSearchParams] = useState({
@@ -97,49 +99,65 @@ export default function HomePage(){
     setShowAddModal(true);
   }
 
+  const handleToggle = () =>{
+    setIsOpen(!isOpen);
+  }
+
   return(
     <div>
       <header className={styles.header}>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-        <form onSubmit={
-          handleSearch
-        } className="">
-          <input
-            type="text"
-            name="titulo"
-            placeholder="Buscar título"
-            value={searchParams.titulo}
-            onChange={handleInputChange}
-            className={styles.searchInput}
-          />
-          <input
-            type="text"
-            name="autor"
-            placeholder="Buscar autor"
-            value={searchParams.autor}
-            onChange={handleInputChange}
-            className={styles.searchInput}
-          />
-          <input 
-            type="text"
-            name="editorial"
-            placeholder="Buscar editorial"
-            value={searchParams.editorial}
-            onChange={handleInputChange}
-            className={styles.searchInput}
-          />
-          <select
-            name="disponible"
-            value={searchParams.disponible}
-            onChange={handleInputChange}
-            className={styles.searchInput}
-          >
-            <option value="">Todos</option>
-            <option value="true">Disponibles</option>
-            <option value="false">No disponbiles</option>
-          </select>
-          <button type="submit" className={styles.searchButton}> Buscar </button>
-        </form>
+        <div
+          className={styles.toggleButton} 
+          onClick={handleToggle}
+        >
+          {isOpen ? '⌃' : '⌵'} 
+        </div>
+
+        {/* mostrar y ocultar filtros */}
+        {isOpen && (
+          <form onSubmit={
+            handleSearch
+          } className="">
+            <input
+              type="text"
+              name="titulo"
+              placeholder="Buscar título"
+              value={searchParams.titulo}
+              onChange={handleInputChange}
+              className={styles.searchInput}
+            />
+            <input
+              type="text"
+              name="autor"
+              placeholder="Buscar autor"
+              value={searchParams.autor}
+              onChange={handleInputChange}
+              className={styles.searchInput}
+            />
+            <input 
+              type="text"
+              name="editorial"
+              placeholder="Buscar editorial"
+              value={searchParams.editorial}
+              onChange={handleInputChange}
+              className={styles.searchInput}
+            />
+            <select
+              name="disponible"
+              value={searchParams.disponible}
+              onChange={handleInputChange}
+              className={styles.searchInput}
+            >
+              <option value="">Todos</option>
+              <option value="true">Disponibles</option>
+              <option value="false">No disponbiles</option>
+            </select>
+            <button type="submit" className={styles.searchButton}> Buscar </button>
+          </form>
+        )}
+        
+        
       </header>
 
       <main className={styles.booksGrid}>

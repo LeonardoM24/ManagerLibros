@@ -41,7 +41,6 @@ export class LibrosService{
             queryBuilder.andWhere('libro.cantidad = :cantidad', { cantidad: 0 });
         }
         
-
         return await queryBuilder.getMany()
     }
 
