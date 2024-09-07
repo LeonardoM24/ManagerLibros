@@ -5,6 +5,8 @@ import * as dotenv from 'dotenv';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LibrosModule } from './libros/libros.modules';
 import { join } from 'path';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
 
 // Cargar variables de entorno desde el archivo .env
 dotenv.config({path:'../.env'}); // estando en ./api
@@ -21,6 +23,10 @@ const DB_NAME: string = process.env.DB_NAME || 'name';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../img'),
+      serveRoot: '/img/', // Este es el prefijo para acceder a los archivos estáticos
+    }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: DB_HOST,

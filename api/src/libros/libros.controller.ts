@@ -1,15 +1,38 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { UploadedFile ,Body, Controller, Delete, Get, Param, Post, Put, UseInterceptors } from "@nestjs/common";
 import { LibrosService } from "./libros.service";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
 import { ActualizarLibroDto } from "./dtos/actualizar-libro.dto";
+import { FileInterceptor } from "@nestjs/platform-express";
+import { diskStorage } from 'multer';
+import { extname } from 'path'
+import { error } from "console";
+import { Express } from "express";
 
 @Controller('libros')
 export class LibrosController{
     constructor(private readonly librosService: LibrosService){}
 
     @Post('crear')
-    crear(@Body() dto: CrearLibroDto){
+    @UseInterceptors(FileInterceptor('imagen', {
+        storage: diskStorage({
+            destination: './img',
+            filename: (req, file, cb) =>{
+                // cambiar el nombr del archivo al ID del libro
+                const id = req.body.id;
+                const fileExt = extname(file.originalname);
+                cb(null, `${id}${fileExt}`)
+            }
+        }),
+        fileFilter: (req, file, cb) => {
+            if (file.mimetype.match(/\/(jpg|jpeg|png)$/)){
+                cb(null, true);
+            } else{
+                cb(new Error('Tipo de archivo no soportado'), false);
+            }
+        }
+    }))
+    async crear(@UploadedFile() file: Express.Multer.File , @Body() dto: CrearLibroDto){
         /*
         post
         http://localhost:3000/libros/crear
@@ -23,7 +46,22 @@ export class LibrosController{
             "imagen": ""
         }
         */
-        return this.librosService.crear(dto);
+        const imagePath = file ? `/img/${file.filename}` : null;
+        const nuevoLibro = { ...dto, imagen: imagePath }
+        
+        const libroCreado = await this.librosService.crear(nuevoLibro);
+
+        if (file && libroCreado){
+            const newFileName = `${libroCreado.id}${extname(file.originalname)}`;
+            const fs = require('fs');
+            const oldPath = `./img/${file.filename}`;
+            const newPath = `./img/${newFileName}`;
+            fs.renameSync(oldPath, newPath);
+            libroCreado.imagen = `/img/${newFileName}`;
+            await this.librosService.actualizar(libroCreado.id, { imagen: libroCreado.imagen });
+        }
+
+        return libroCreado;
     }
     
     @Get('mostrar')
@@ -43,7 +81,28 @@ export class LibrosController{
     }
     
     @Put('actualizar/:id')
-    actualizar(@Param('id') id: number, @Body() dto: ActualizarLibroDto){
+    @UseInterceptors(FileInterceptor('imagen', {
+        storage: diskStorage({
+            destination: './img',
+            filename: (req, file, cb) => {
+                const id = req.params.id;
+                const fileExt = extname(file.originalname);
+                cb(null, `${id}${fileExt}`);
+            }
+        }),
+        fileFilter: (req, file, cb) => {
+            if (file.mimetype.match(/\/(jpg|jpeg|png)$/)) {
+                cb(null, true);
+            } else {
+                cb(new Error('Tipo de archivo no soportado'), false);
+            }
+        }
+    }))
+    async actualizar(
+        @Param('id') id: number,
+        @UploadedFile() file: Express.Multer.File,
+        @Body() dto: ActualizarLibroDto)
+    {
         /*
         put
         http://localhost:3000/libros/actualizar/:id
@@ -57,7 +116,9 @@ export class LibrosController{
             "imagen": ""
         }
         */
-        return this.librosService.actualizar(id,dto);
+        const imagePath = file ? `/img/${id}${extname(file.originalname)}` : dto.imagen;
+        const libroActualizado = await this.librosService.actualizar(id, { ...dto, imagen: imagePath })
+        return libroActualizado;
     }
 
     @Delete('borrar/:id')

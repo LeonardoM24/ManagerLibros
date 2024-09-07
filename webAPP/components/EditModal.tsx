@@ -21,6 +21,7 @@ export default function EditModal({
     const [editorial, setEditorial] = useState(book?.editorial || '');
     const [description, setDescription] = useState(book?.descripcion || '');
     const [img, setImg] = useState(book?.imagen || '');
+    const [imgFile, setImgFile] = useState<File | null>(null);
 
     const handleSave = async () => {
         let errorMSJ : string = 'Error al actualizar el libro';
@@ -33,26 +34,27 @@ export default function EditModal({
         // Guardar los cambios (enviar los datos a la API).
         if(confirmSave){
             try{
+                const formData = new FormData();
+                formData.append('titulo', name);
+                formData.append('cantidad', quantity.toString());
+                formData.append('autor', autor);
+                formData.append('editorial', editorial);
+                formData.append('descripcion', description);
 
+                if (imgFile) {
+                    formData.append('imagen', imgFile);
+                }
+                
                 let apiCall : string = 'http://localhost:3000/libros/crear';
                 let method : string = 'POST';
                 if(!isAdding){
                     apiCall = `http://localhost:3000/libros/actualizar/${book.id}`;
                     method  = 'PUT';
                 }
+
                 const response = await fetch(apiCall,{
                     method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        titulo: name,
-                        cantidad: quantity,
-                        autor: autor,
-                        editorial: editorial,
-                        descripcion: description,
-                        imagen: img,
-                    }),
+                    body: formData,
                 });
                 if(!response.ok){
                     throw new Error(errorMSJ);
@@ -141,6 +143,13 @@ export default function EditModal({
                     value={description} 
                     onChange={(e) => setDescription(e.target.value)} 
                 />
+                {/* Input de imagen */}
+                <input
+                    type='file'
+                    accept='.jpg,.png'
+                    onChange={(e) => setImgFile(e.target.files ? e.target.files[0] : null)}
+                ></input>
+
                 <div>
                     <button 
                         className={styles.saveButton}

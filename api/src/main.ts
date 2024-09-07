@@ -1,6 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { join } from 'path'
+import { ServeStaticModule } from '@nestjs/serve-static';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,6 +12,7 @@ async function bootstrap() {
     methods: 'GET,POST,PUT,DELETE', // Métodos permitidos
   })
   
+
   await app.listen(3000);
 }
 bootstrap();

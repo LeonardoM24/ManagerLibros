@@ -48,6 +48,10 @@ Yo uso una de tipo mysql con typeOrm.
 ```bash
 npm i -g @nestjs/cli
 npm install --save @nestjs/typeorm typeorm mysql2
+npm install --save @nestjs/platform-express multer
+npm install multer
+npm install @types/multer
+npm install @nestjs/serve-static
 ```
 
 ### correr api
