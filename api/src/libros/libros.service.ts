@@ -1,11 +1,22 @@
 import { flatten, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Libro } from "./libro.entity";
-import { MoreThanOrEqual, QueryBuilder, Repository } from "typeorm";
+import { MoreThanOrEqual, Not, QueryBuilder, Repository } from "typeorm";
 import { CrearLibroDto } from "./dtos/crear-libro.dto";
 import { MostrarLibrosDto } from "./dtos/mostrar-libro.dto";
 import { ActualizarLibroDto } from "./dtos/actualizar-libro.dto";
+import * as path from "path";
+import * as fs from 'fs/promises';
 
+
+const fileExists = async (filePath: string) => {
+    try {
+        await fs.access(filePath);
+        return true;
+    } catch (err) {
+        return false;
+    }
+};
 
 @Injectable()
 export class LibrosService{
@@ -57,7 +68,8 @@ export class LibrosService{
 
     async borrar(id: number){
         const libro = await this.libroRepository.findOne({where: {id}})
-
+        
         return await this.libroRepository.remove(libro);
     }
+
 }

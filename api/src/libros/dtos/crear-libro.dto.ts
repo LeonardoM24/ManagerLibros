@@ -5,5 +5,5 @@ export class CrearLibroDto{
     autor: string;
     descripcion: string;
     editorial: string;
-    imagen: string;
+    imagen?: string;
 }
