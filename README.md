@@ -21,7 +21,7 @@ Esta aplicación permite a los usuarios ver y filtrar libros de una base de dato
 * RNF3: Back en Nest.js
 * RNF4: UI/UX Bonito y amigable
 * RNF5: Responsiva con soporte para el telefono
-* RF6: Delete, se pueden borrar libros de la base de datos
+
 
 ----
 ## Base de datos

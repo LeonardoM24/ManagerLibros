@@ -32,7 +32,6 @@ export class LibrosService{
         if (editorial && editorial  !== '') {
             queryBuilder.andWhere('libro.editorial LIKE :editorial', { editorial: `%${editorial}%` });
         }
-        console.log("hola " + typeof(disponible))
 
         
         if(disponible === "true"){
